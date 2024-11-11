@@ -73,7 +73,7 @@ const CreateEmployee = () => {
 
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/employees/add-employee`,
+          `http://localhost:4005/api/v1/employee/add-employee`,
           formData,
           {
             headers: {

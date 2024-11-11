@@ -30,10 +30,9 @@ const Login = () => {
         password: "Password must be at least 8 characters, with 1 uppercase, 1 lowercase, 1 number, and 1 special character",
       }));
     }
-
     try {
       const res = await axios.post(
-        `${process.env.VITE_BASE_URL}/user/login`,
+        `http://localhost:4005/api/v1/user/login`,
         { email, password },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );

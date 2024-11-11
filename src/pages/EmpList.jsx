@@ -61,7 +61,7 @@ const EmployeeList = () => {
             onClick={() => setSearchTerm("")}
             className="bg-indigo-500 text-white px-4 py-2 mx-2 rounded-lg hover:bg-indigo-600"
           >
-            Clear
+            Search
           </button>
         </div>
 
