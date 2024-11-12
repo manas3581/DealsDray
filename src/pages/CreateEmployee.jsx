@@ -9,29 +9,27 @@ const CreateEmployee = () => {
     name: "",
     email: "",
     tel: "",
-    position: "Manager", // Default position
+    position: "Manager",
     gender: "",
-    qualifications: [], // To hold checked qualifications
+    qualifications: [],
     image: null,
   });
 
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState("");
   const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors = {};
 
-    // Validate Employee ID (must be 4 digits)
     if (!/^\d{4}$/.test(employee.id)) {
       newErrors.id = "Employee ID must be exactly 4 digits.";
     }
 
-    // Validate Email
     if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(employee.email)) {
       newErrors.email = "Please enter a valid email address.";
     }
 
-    // Validate Mobile Number (must be 10 digits)
     if (!/^\d{10}$/.test(employee.tel)) {
       newErrors.tel = "Mobile number must be exactly 10 digits.";
     }
@@ -60,6 +58,7 @@ const CreateEmployee = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setServerError("");
     if (validateForm()) {
       const formData = new FormData();
       formData.append("id", employee.id);
@@ -68,15 +67,18 @@ const CreateEmployee = () => {
       formData.append("tel", employee.tel);
       formData.append("position", employee.position);
       formData.append("gender", employee.gender);
-      formData.append("qualifications", JSON.stringify(employee.qualifications)); // Send as JSON string
+      formData.append("qualifications", JSON.stringify(employee.qualifications));
       if (employee.image) formData.append("image", employee.image);
 
       try {
+        const token = window.localStorage.getItem("token");
+
         const response = await axios.post(
-          `http://localhost:4005/api/v1/employee/add-employee`,
+          "http://localhost:4005/api/v1/employee/add-employee",
           formData,
           {
             headers: {
+              Authorization: `Bearer ${token}`,
               "Content-Type": "multipart/form-data",
             },
           }
@@ -86,10 +88,10 @@ const CreateEmployee = () => {
           console.log("Employee added successfully:", response.data.data);
           navigate("/empList");
         } else {
-          console.error("Error:", response.data.message);
+          setServerError(response.data.message || "Failed to add employee.");
         }
       } catch (error) {
-        console.error("Error adding employee:", error);
+        setServerError(error?.response?.data?.message || "Error adding employee.");
       }
     }
   };

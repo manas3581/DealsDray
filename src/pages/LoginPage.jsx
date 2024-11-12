@@ -30,6 +30,7 @@ const Login = () => {
         password: "Password must be at least 8 characters, with 1 uppercase, 1 lowercase, 1 number, and 1 special character",
       }));
     }
+
     try {
       const res = await axios.post(
         `http://localhost:4005/api/v1/user/login`,
@@ -38,10 +39,11 @@ const Login = () => {
       );
 
       if (res.data.success) {
-        window.localStorage.setItem("token", res.data.data.token);
-        setUser(res.data.data.user);
-        setAuthenticate(true);
-        navigate("/dashboard");
+        const { token, user } = res.data.data.token;
+        localStorage.setItem("authToken", token);  // Store the token in localStorage
+        setUser(user);  // Set user data in context
+        setAuthenticate(true);  // Update authentication status in context
+        navigate("/dashboard");  // Redirect to dashboard
       }
     } catch (error) {
       setError((prev) => ({ ...prev, custom: error?.response?.data?.message || "Login failed" }));
@@ -50,7 +52,7 @@ const Login = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-gradient-to-br from-pink-200 to-pink-300">
-      <div className="absolute top-4 left-4 ">
+      <div className="absolute top-4 left-4">
         <img src={logo_B2R} alt="Logo" className="w-24 h-24" />
       </div>
       

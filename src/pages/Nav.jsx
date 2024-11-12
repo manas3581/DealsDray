@@ -5,6 +5,12 @@ const Nav = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Function to clear the token and navigate to login page
+  const handleLogout = () => {
+    localStorage.removeItem('authToken'); // Clear the token
+    navigate('/'); // Redirect to login page or homepage
+  };
+
   const navLinkClasses = (path) =>
     `hover:text-gray-600 cursor-pointer hover:underline hover:underline-offset-4 transition duration-200 ${
       location.pathname === path ? "text-indigo-600 underline" : ""
@@ -35,7 +41,7 @@ const Nav = () => {
             User
           </li>
           <li
-            onClick={() => navigate('/')}
+            onClick={handleLogout} // Call handleLogout on click
             className={navLinkClasses('/')}
           >
             Logout
