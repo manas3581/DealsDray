@@ -39,7 +39,7 @@ const Login = () => {
       );
 
       if (res.data.success) {
-        const { token, user } = res.data.data.token;
+        const { token, user } = res.data?.data;
         localStorage.setItem("authToken", token);  // Store the token in localStorage
         setUser(user);  // Set user data in context
         setAuthenticate(true);  // Update authentication status in context

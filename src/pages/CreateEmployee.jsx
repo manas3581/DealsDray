@@ -4,6 +4,8 @@ import axios from "axios";
 import Nav from "./Nav";
 
 const CreateEmployee = () => {
+  const [imagePreview, setImagePreview] = useState(null);
+  const [base64Image, setBase64Image] = useState("");
   const [employee, setEmployee] = useState({
     id: "",
     name: "",
@@ -12,7 +14,7 @@ const CreateEmployee = () => {
     position: "Manager",
     gender: "",
     qualifications: [],
-    image: null,
+    base64Image: null,
   });
 
   const [errors, setErrors] = useState({});
@@ -52,34 +54,51 @@ const CreateEmployee = () => {
     }
   };
 
-  const handleFileChange = (e) => {
-    setEmployee({ ...employee, image: e.target.files[0] });
-  };
 
+
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      
+      reader.onloadend = () => {
+        setEmployee({ ...employee, base64Image:reader.result.split(",")[1] });
+        setImagePreview(reader.result); // Display image preview
+
+        setBase64Image(reader.result.split(",")[1]); // Store Base64 string in state
+      };
+      
+      reader.readAsDataURL(file);
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setServerError("");
     if (validateForm()) {
-      const formData = new FormData();
-      formData.append("id", employee.id);
-      formData.append("name", employee.name);
-      formData.append("email", employee.email);
-      formData.append("tel", employee.tel);
-      formData.append("position", employee.position);
-      formData.append("gender", employee.gender);
-      formData.append("qualifications", JSON.stringify(employee.qualifications));
-      if (employee.image) formData.append("image", employee.image);
 
+      
+        const payload = {
+          employeeId: employee.id,
+          name: employee.name,
+          email: employee.email,
+          mobileNumber: employee.tel,
+          designation: employee.position,
+          gender: employee.gender,
+          course: employee.qualifications[0],
+          profilePic: employee.base64Image,
+        };
+      
       try {
-        const token = window.localStorage.getItem("token");
+        const token = window.localStorage.getItem("authToken");
 
         const response = await axios.post(
           "http://localhost:4005/api/v1/employee/add-employee",
-          formData,
+          payload,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
+              Authorization: `${token}`,
+              "Content-Type": "application/json",
             },
           }
         );
@@ -261,15 +280,21 @@ const CreateEmployee = () => {
 
             {/* Image Upload Field */}
             <div className="mb-4">
-              <label className="block text-gray-700 font-semibold mb-2">Image Upload</label>
-              <input
-                type="file"
-                name="image"
-                accept=".jpg, .png"
-                onChange={handleFileChange}
-                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
+      <label className="block text-gray-700 font-semibold mb-2">Image Upload</label>
+      <input
+        type="file"
+        name="image"
+        accept=".jpg, .png"
+        onChange={handleFileChange}
+        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      />
+      {imagePreview && (
+        <div className="mt-4">
+          <p className="text-gray-700">Image Preview:</p>
+          <img src={imagePreview} alt="Preview" className="mt-2 w-48 h-48 object-cover rounded-lg" />
+        </div>
+      )}
+    </div>
 
             {/* Submit Button */}
             <div className="text-center">
