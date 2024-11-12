@@ -1,5 +1,5 @@
 # React + Vite
-emmail: manaskumar3581@gmail.com
+email: manaskumar3581@gmail.com
 password: Manas@123
 
 
