@@ -1,6 +1,5 @@
-# React + Vite
+DealsDray MERN Project
 
-DealsDray Project
 Overview
 DealsDray is a web application developed with the MERN stack (MongoDB, Express, React, Node.js). It enables efficient management of user interactions and data, providing a seamless interface for users to access and interact with stored information. The project includes a frontend built with React and Tailwind CSS and a backend API powered by Express and MongoDB.
 Login credentials
