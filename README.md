@@ -6,7 +6,7 @@ DealsDray is a web application developed with the MERN stack (MongoDB, Express, 
 Login credentials
 email: manaskumar3581@gmail.com 
 password: Manas@123
-UI explaination link: https://youtu.be/A_LtX4_BHrw
+Video link: https://youtu.be/OctvJ-4damo
 
 
 Features
